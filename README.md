@@ -1,0 +1,1 @@
+Implementação de uma variação do jogo Ludo em lingaugem C
