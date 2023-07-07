@@ -4,49 +4,29 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-typedef struct casa {
-    int x;
-    int y;
-    int valor;
-    int color;
-    int ocupado;
-}casa;
+#define NUM_PLAYERS 4
+#define NUM_PIECES 4
+#define START_POSITION -1
 
-typedef struct base{
-    int posicion_x, position_y;
-}base;
+typedef enum { RED, YELLOW, GREEN, BLUE } Color;
 
-typedef struct position{
-    int posicion_x, position_y;
-}position;
+typedef struct {
+    int position;
+    bool safe;
+} Piece;
 
-typedef struct Pawn{
-    position init, chegada,current;
-    base b;
-    int color;
-}Pawn;
+typedef struct {
+    Piece pieces[NUM_PLAYERS][NUM_PIECES];
+} Board;
 
-typedef struct Player{
-    Pawn pawns[4];
-    int color;
-}Player;
-
-typedef struct Game{
-    Player players[4];
-    int dice;
-    int turn;
-    int winner;
-    casa** board;
-}Game;
-
-casa** build_board();
-void setbases(Pawn* pawns, int& j, int&);
-void rollDice(int& dice);
-int get max(int* vector);
-int star_game(int numPlayers);
-int play_turn(Game* game, int player, int pawn, int dice);
-void play_game(Game* game, int numPlayers);
+void build_board(Board *board);
+void print_board(const Board *board);
+int roll_dice();
+void move_piece(Board *board, Color color, int piece, int roll);
+bool is_winner(const Board *board, Color color);
+bool valid_move(Board *board, Color color, int piece, int roll);
 
 
 
