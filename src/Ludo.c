@@ -36,15 +36,27 @@ bool valid_move(Board* board, Color player, int piece, int steps) {
     int currentPosition = board->pieces[player][piece].position;
     int newPosition = currentPosition + steps;
 
+    // Se ele ganhou retorna true
     if (newPosition == 58)
         return true;
 
+    //Se ele sair do tabuleiro retorna false
     if (newPosition > 58)
         return false;
 
+    // se ele estiver em um dos blocos de seguraça e não
+    // tirar exatamente o necessário para ganhar retorna false
+    if(currentPosition >= 52 && currentPosition <= 57){
+        if(newPosition - 58 != 0){
+            return false;
+        }       
+    }
+
+    // Se for para um dos blocos de segurança retorna true
     if (newPosition >= 52 && newPosition <= 57)
         return true;
 
+    //Não pode estar em um local igual ao de outro jogador
     for (int i = 0; i < NUM_PLAYERS; i++) {
         for (int j = 0; j < NUM_PIECES; j++) {
             if (i != player && board->pieces[i][j].position == newPosition)

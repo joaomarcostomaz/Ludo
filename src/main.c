@@ -42,6 +42,9 @@ int main(){
                 break;
             }
             while(current6 > 0){
+                if(current6 == 3)
+                    break;
+                
                 printf("Player %d rolled a 6, roll again!\n", currentPlayer + 1);
                 int piece;
                 do {
