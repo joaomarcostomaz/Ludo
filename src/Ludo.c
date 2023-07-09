@@ -74,6 +74,10 @@ void move_piece(Board* board, Color player, int piece, int steps) {
     if(currentPosition == START_POSITION && steps == 6){
         newPosition = 0;
         board->pieces[player][piece].position = 0;
+    }else if(currentPosition == START_POSITION && steps != 6){
+        newPosition = START_POSITION;
+        printf("Player %d Piece %d is still in the start position untill it rolls a 6!\n", player + 1, piece + 1);
+        return;
     }else{
         newPosition = currentPosition + steps;
     }
