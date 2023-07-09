@@ -45,14 +45,6 @@ bool valid_move(Board* board, Color player, int piece, int steps) {
     if (newPosition > 58)
         return false;
 
-    // se ele estiver em um dos blocos de seguraça e não
-    // tirar exatamente o necessário para ganhar retorna false
-    if(currentPosition >= 52 && currentPosition <= 57){
-        if(newPosition - 58 != 0){
-            return false;
-        }       
-    }
-
     // Se for para um dos blocos de segurança retorna true
     if ((newPosition >= 52 && newPosition <= 57) || newPosition == 8 || newPosition == 21 || newPosition == 34 || newPosition == 47)
         return true;
@@ -84,7 +76,22 @@ void move_piece(Board* board, Color player, int piece, int steps) {
 
     if (newPosition == 58) {
         printf("Player %d Piece %d reached the goal!\n", player + 1, piece + 1);
-    } else if ((newPosition >= 52 && newPosition <= 57) || newPosition == 8 || newPosition == 21 || newPosition == 34 || newPosition == 47) {
+    } else if(currentPosition >= 52 && currentPosition <= 57){
+        if(newPosition - 58 == 0){
+            printf("Player %d Piece %d reached the goal!\n", player + 1, piece + 1);
+            board->pieces[player][piece].position = newPosition;
+            board->pieces[player][piece].safe = true;
+        }else{
+            int newPiece;
+            do{
+                printf("Invalid number. You need the exact number to reach the goal!\n");
+                printf("Choose another piece number (1-4): ");
+                scanf("%d", &newPiece);
+                newPiece--; 
+            }while(piece < 0 || piece >= NUM_PIECES);
+            move_piece(board, player, newPiece, steps);
+        }
+    }else if ((newPosition >= 52 && newPosition <= 57) || newPosition == 8 || newPosition == 21 || newPosition == 34 || newPosition == 47) {
         printf("Player %d Piece %d reached a safe position %d!\n", player + 1, piece + 1, newPosition);
         board->pieces[player][piece].position = newPosition;
         board->pieces[player][piece].safe = true;
