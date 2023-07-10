@@ -60,6 +60,7 @@ bool valid_move(Board* board, Color player, int piece, int steps) {
 void move_piece(Board* board, Color player, int piece, int steps) {
     int currentPosition = board->pieces[player][piece].position;
     int newPosition;
+    bool validade = false;;
     //Caso esteja na base e tira um 6, sai da base, se não, mantem na base
     if(currentPosition == START_POSITION && steps == 6){
         newPosition = 0;
@@ -71,6 +72,9 @@ void move_piece(Board* board, Color player, int piece, int steps) {
     }else{
         newPosition = currentPosition + steps;
     }
+    //Piece left base
+    if(currentPosition == START_POSITION && newPosition == 0)
+        validate = true;
 
     bool captured = 0;
     //Checa se existe alguma peca na posicao a ser visitada
@@ -91,6 +95,20 @@ void move_piece(Board* board, Color player, int piece, int steps) {
             printf("Player %d Piece %d reached the goal!\n", player + 1, piece + 1);
             board->pieces[player][piece].position = newPosition;
             board->pieces[player][piece].safe = true;
+            if(!is_winner(board, player)){
+                printf("Player %d Piece %d completed the path. Play again!\n", player + 1, piece + 1);
+                int newPiece;
+                do{
+                    printf("Choose another piece number (1-4): ");
+                    scanf("%d", &newPiece);
+                    newPiece--;
+                }while(newPiece < 0 || newPiece >= NUM_PIECES);
+                int newSteps = roll_dice();
+                printf("Player %d rolled a %d!\n", player + 1, newSteps);
+                if(valid_move(board, player, newPiece, newSteps)){
+                    move_piece(board, player, newPiece, newSteps);  
+                }
+            }
         }else{
             //Caso não tira o número exato, escolhe outra peca para ser movida
             //Caso não seja possivel mover nenhuma peca, perde a vez
@@ -128,6 +146,21 @@ void move_piece(Board* board, Color player, int piece, int steps) {
     if(captured == 1){
         //Caso capture uma peça, joga novamente
         printf("Player %d Piece %d captured a piece and will play again!\n", player + 1, piece + 1);
+        int newPiece;
+        do{
+            printf("Choose another piece number (1-4): ");
+            scanf("%d", &newPiece);
+            newPiece--;
+        }while(newPiece < 0 || newPiece >= NUM_PIECES);
+        int newSteps = roll_dice();
+        printf("Player %d rolled a %d!\n", player + 1, newSteps);
+        if(valid_move(board, player, newPiece, newSteps)){
+            move_piece(board, player, newPiece, newSteps);  
+        }
+    }
+    if(validade == true){
+        //Caso saia da base, joga novamente
+        printf("Player %d Piece %d left base and will play again!\n", player + 1, piece + 1);
         int newPiece;
         do{
             printf("Choose another piece number (1-4): ");
