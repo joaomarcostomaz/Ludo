@@ -60,7 +60,7 @@ bool valid_move(Board* board, Color player, int piece, int steps) {
 void move_piece(Board* board, Color player, int piece, int steps) {
     int currentPosition = board->pieces[player][piece].position;
     int newPosition;
-    bool validade = false;;
+    bool validate = false;;
     //Caso esteja na base e tira um 6, sai da base, se não, mantem na base
     if(currentPosition == START_POSITION && steps == 6){
         newPosition = 0;
@@ -158,7 +158,7 @@ void move_piece(Board* board, Color player, int piece, int steps) {
             move_piece(board, player, newPiece, newSteps);  
         }
     }
-    if(validade == true){
+    if(validate == true){
         //Caso saia da base, joga novamente
         printf("Player %d Piece %d left base and will play again!\n", player + 1, piece + 1);
         int newPiece;
