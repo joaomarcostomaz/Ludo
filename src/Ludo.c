@@ -56,6 +56,14 @@ bool valid_move(Board* board, Color player, int piece, int steps) {
     return true;
 }
 
+//Funcao para verificar se o jogador ganhou
+bool is_winner(const Board* board, Color player) {
+    for (int i = 0; i < NUM_PIECES; i++) {
+        if (board->pieces[player][i].position != 58)
+            return false;
+    }
+    return true;
+}
 //Funcao para mover a peça
 void move_piece(Board* board, Color player, int piece, int steps) {
     int currentPosition = board->pieces[player][piece].position;
@@ -161,25 +169,41 @@ void move_piece(Board* board, Color player, int piece, int steps) {
     if(validate == true){
         //Caso saia da base, joga novamente
         printf("Player %d Piece %d left base and will play again!\n", player + 1, piece + 1);
-        int newPiece;
-        do{
-            printf("Choose another piece number (1-4): ");
-            scanf("%d", &newPiece);
-            newPiece--;
-        }while(newPiece < 0 || newPiece >= NUM_PIECES);
-        int newSteps = roll_dice();
-        printf("Player %d rolled a %d!\n", player + 1, newSteps);
-        if(valid_move(board, player, newPiece, newSteps)){
-            move_piece(board, player, newPiece, newSteps);  
+        int current6 = 0;
+        if(steps == 6){
+            current6++;
+        }
+        //Caso tire 3 seis seguidos, perde a vez
+        //O jogador pode jogar novamente caso tire uma peca da base
+        while(current6 > 0){
+            if(current6 == 3){
+                printf("Player %d lost the turn!\n", player + 1);
+                return;
+            }
+        
+            int piece;
+            do {
+                printf("Enter piece number (1-4): ");
+                scanf("%d", &piece);
+                piece--; // Adjusting for zero-based indexing
+            } while (piece < 0 || piece >= NUM_PIECES);
+
+            int steps = roll_dice();
+            printf("You rolled a %d\n", steps);
+            if (valid_move(board, player, piece, steps)) {
+                if(steps == 6){
+                    current6++;
+                }
+                move_piece(board, player, piece, steps);
+
+                if (is_winner(board, player)) {
+                    printf("Player %d has won the game!\n", player + 1);
+                    break;
+                }
+            } else {
+                printf("Invalid move, try again next time\n");
+            }
+            current6--;
         }
     }
-}
-
-//Funcao para verificar se o jogador ganhou
-bool is_winner(const Board* board, Color player) {
-    for (int i = 0; i < NUM_PIECES; i++) {
-        if (board->pieces[player][i].position != 58)
-            return false;
-    }
-    return true;
 }
